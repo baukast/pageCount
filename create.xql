@@ -7,7 +7,10 @@ declare option output:media-type "text/html";
 
 let $key := util:uuid()
 
-let $coll := xmldb:store('/db/apps/pageCount', $key||'.xml', <project id="{$key}"></project>)
+let $coll := xmldb:store('/db/apps/pageCount', $key||'.xml', <project><id>{$key}</id></project>)
+let $chmod := sm:chmod($coll, 'rw-rw-rw-')
+let $chown := sm:chown($coll, 'pagecount')
+let $chgrp := sm:chgrp($coll, 'baukast')
 
 return
     <html>
