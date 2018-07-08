@@ -102,13 +102,21 @@ declare function local:get() {
 let $origFileName := request:get-uploaded-file-name('file')
 let $type := substring($origFileName, string-length($origFileName)-2)
 
-return     
+return
 <html>
     <head>
         <title>Seitenzähler</title>
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>{
+        if (string-length($origFileName) = 0) then
+            (<header>bau|ka|st</header>,
+                <div><h1>keine Datei übermittelt</h1></div>,
+                <div><h1>Projekt insgesamt</h1>{local:get()}</div>,
+                <footer><p>Diese Werte dienen ausschließlich der Information und stellen weder ein Angebot noch eine Rechnung seitens der
+                    Firma baukast Baumgarten, Kampkaspar, Steyer GbR dar.
+                </p></footer>)
+        else
         let $origFileData := util:base64-decode(string(request:get-uploaded-file-data('file')))
         return if ($type = 'xml') then
             let $text := util:parse($origFileData)
