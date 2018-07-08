@@ -1,13 +1,17 @@
 body {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap
 }
 table {
     border-collapse: collapse;
 }
 td {
-    padding: 0.5px;
+    padding: 2.5px;
 }
 div {
     width:50%;
+}
+header, footer {
+    width: 100%;
 }

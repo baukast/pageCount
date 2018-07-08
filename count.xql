@@ -77,6 +77,28 @@ declare function local:save($origFileName, $len, $fn, $ca, $co) {
         else update insert $entry into $project
 };
 
+declare function local:get() {
+    let $files := doc('/db/apps/pageCount/'||$local:project||'.xml')//*:file
+    
+    return
+        <table>
+            {for $file in $files return
+                <tr>
+                    <td>{$file/@name||':'}</td>
+                    <td>{$file/@type||''}</td>
+                    <td>{$file/@pages||' Seiten'}</td>
+                    <td style="text-align: right;">{format-number($file/@price, '0.00')} €</td>
+                </tr>
+            }
+            <tr style="border-top: 1px solid;">
+                <td>Gesamt</td>
+                <td> </td>
+                <td>{sum($files//@pages)}</td>
+                <td style="text-align: right;">{format-number(sum($files//@price), '0.00')} €</td>
+            </tr>
+        </table>
+};
+
 let $origFileName := request:get-uploaded-file-name('file')
 let $type := substring($origFileName, string-length($origFileName)-2)
 
@@ -96,10 +118,15 @@ return
             let $co := request:get-parameter("complex", "")
             
             let $saveValues := local:save($origFileName, $len, $fn, $ca, $co)
+            let $allValues := local:get()
             
-            return (<div><h1>aktuelle Datei</h1><h2>{$origFileName}</h2>
+            return (<header>bau|ka|st</header>,
+                <div><h1>aktuelle Datei</h1><h2>{$origFileName}</h2>
                 {local:table($origFileName, $len, $fn, $ca, $co)}</div>,
-                <div><h1>Projekt insgesamt</h1>{$saveValues}</div>)
+                <div><h1>Projekt insgesamt</h1>{$allValues}</div>,
+                <footer><p>Diese Werte dienen ausschließlich der Information und stellen weder ein Angebot noch eine Rechnung seitens der
+                    Firma baukast Baumgarten, Kampkaspar, Steyer GbR dar.
+                </p></footer>)
                 
         else if ($type = 'tex') then
             string-length(normalize-space($origFileData))
