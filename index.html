@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de">
+    <head>
+        <title>Normseiten-Tool</title>
+        <style>
+            label {
+                width: 120px;
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Normseiten-/Kostenabschätzer</h1>
+            <p>
+                <a href="create.xql">Projekt erstellen</a>
+            </p>
+        </div>
+        <form action="count.xql" enctype="multipart/form-data">
+            <label>Projekt-Key: </label>
+            <input id="key"/>
+            <br/>
+            <label>Datei auswählen (TEI P5 oder LaTeX): </label>
+            <input type="file" id="file"/>
+            <br/>
+            <input type="submit"/>
+        </form>
+        <div>
+            <p>Dieses Tool ermittelt die ungefähre Zahl der Normseiten aus den hochgeladenen XML-Dateien im Format TEI P5.<br/>
+                Zunächst muß ein Projekt ausgewählt und mit Key verifiziert oder ein neues Projekt erstellt werden.<br/>
+                Bitte beachten Sie, daß die XML-Dateien sowie die Ergebnisse der Berechnung auf diesem Server gespeichert werden, bis das Projekt gelöscht wird.</p>
+        </div>
+    </body>
+</html>
