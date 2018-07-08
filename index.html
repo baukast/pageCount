@@ -19,8 +19,11 @@
             <label>Projekt-Key: </label>
             <input id="key"/>
             <br/>
-            <label>Datei auswählen: </label>
+            <label>Datei auswählen (TEI P5 oder LaTeX): </label>
             <input type="file" name="file"/>
+            <br/>
+            <label>komplex*:</label>
+            <input type="checkbox" name="complex"/>
             <br/>
             <input type="submit"/>
         </form>
@@ -28,6 +31,8 @@
             <p>Dieses Tool ermittelt die ungefähre Zahl der Normseiten aus den hochgeladenen XML-Dateien im Format TEI P5.<br/>
                 Zunächst muß ein Projekt ausgewählt und mit Key verifiziert oder ein neues Projekt erstellt werden.<br/>
                 Bitte beachten Sie, daß die XML-Dateien sowie die Ergebnisse der Berechnung auf diesem Server gespeichert werden, bis das Projekt gelöscht wird.</p>
+            <p>Komplexes Layout liegt vor, wenn ein zweispaltiger oder doppelseitiger Satz gewünscht ist – z.B. für Originaltext und Übersetzungen.
+                Komplexes Layout wird automatisch angenommen, wenn im Text Marginalien (<pre>&lt;note place="margin"&gt;</pre>) enthalten sind.</p>
         </div>
     </body>
 </html>
