@@ -7,7 +7,7 @@ declare option output:media-type "text/html";
 
 let $key := util:uuid()
 
-let $coll := xmldb:create-collection('/db/apps/pageCount', $key)
+let $coll := xmldb:store('/db/apps/pageCount', $key||'.xml', <project id="{$key}"></project>)
 
 return
     <html>
