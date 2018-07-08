@@ -9,6 +9,7 @@ declare option output:media-type "text/html";
 declare variable $local:pageLength := 1600;
 declare variable $local:price := map {"normal" : 3.50, "simple": 1.50, "complex": 6.00, "extended": 4.50};
 declare variable $local:fnmult := 3;
+declare variable $local:project := normalize-space(request:get-parameter('key', ''));
 
 declare function local:table ($fileName as xs:string, $len as xs:int, $fn as xs:int, $ca as xs:int, $co) {
     let $fnC := $local:fnmult * $fn
@@ -56,6 +57,26 @@ declare function local:table ($fileName as xs:string, $len as xs:int, $fn as xs:
     </table>
 };
 
+declare function local:save($origFileName, $len, $fn, $ca, $co) {
+    let $fnC := $local:fnmult * $fn
+    let $caC := $local:fnmult * $ca
+    let $total := ($len + $fnC) + $ca
+    let $pages := round($total div $local:pageLength)
+    
+    let $type := if ($co) then "complex"
+        else if ($ca > 0) then "extended"
+        else if ($fn > 0) then "normal"
+        else "simple"
+    
+    let $entry :=
+    <file name="{$origFileName}" type="{$type}" len="{$total}" pages="{$pages}" price="{$local:price($type) * $pages}" />
+    let $project := doc('/db/apps/pageCount/'||$local:project||'.xml')/*:project
+
+    return if ($project/*:file[@name=$origFileName])
+        then update replace $project/*:file[@name=$origFileName] with $entry
+        else update insert $entry into $project
+};
+
 let $origFileName := request:get-uploaded-file-name('file')
 let $type := substring($origFileName, string-length($origFileName)-2)
 
@@ -71,12 +92,14 @@ return
             let $text := util:parse($origFileData)
             let $len := string-length(normalize-space($text//tei:text))
             let $fn := count($text//tei:note[@type='footnote'] | $text//tei:note[@type='annotation'])
-            let $ca := count($text//tei:note[@type='crit_app']) + count($text//tei:app) + count($text//tei:choice)
+            let $ca := count($text//tei:note[@type='crit_app'] | $text//tei:span[@type='crit_app'] | $text//tei:app | $text//tei:choice)
             let $co := request:get-parameter("complex", "")
+            
+            let $saveValues := local:save($origFileName, $len, $fn, $ca, $co)
             
             return (<div><h1>aktuelle Datei</h1><h2>{$origFileName}</h2>
                 {local:table($origFileName, $len, $fn, $ca, $co)}</div>,
-                <div><h1>Projekt insgesamt</h1></div>)
+                <div><h1>Projekt insgesamt</h1>{$saveValues}</div>)
                 
         else if ($type = 'tex') then
             string-length(normalize-space($origFileData))
