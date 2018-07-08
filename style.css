@@ -1,0 +1,13 @@
+body {
+    display: flex;
+    flex-direction: row;
+}
+table {
+    border-collapse: collapse;
+}
+td {
+    padding: 0.5px;
+}
+div {
+    width:50%;
+}
